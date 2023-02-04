@@ -5,8 +5,8 @@ const Ball = (props: Props) => {
     <div
       style={{
         backgroundColor: "red",
-        width: "calc(100vw/12)",
-        height: "calc(100vw/12)",
+        width: "50%",
+        paddingBottom: "50%",
         position: "absolute",
         borderRadius: "100%",
         bottom: 0,

@@ -98,6 +98,7 @@ const PlayingField = (props: Props) => {
     new Promise((res) => setTimeout(res, timeout));
 
   const handleStartGame = async () => {
+    setGameStatus(undefined);
     await placeBall();
     await delay(500);
     setIsShuffling(true);

@@ -33,7 +33,6 @@ const Cup = (props: Props) => {
           border: "none",
           outline: "none",
           height: "250px",
-          // width: "100%",
           width: "calc(100vw/6)",
           transition: "left 1s ease",
           borderRadius: "unset",
