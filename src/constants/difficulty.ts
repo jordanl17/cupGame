@@ -17,3 +17,9 @@ export const MOVE_SPEED: Record<difficultyType, number> = {
   [DIFFICULTY.MODERATE]: 750,
   [DIFFICULTY.HARD]: 500,
 };
+
+export const POINTS: Record<difficultyType, number> = {
+  [DIFFICULTY.EASY]: 1,
+  [DIFFICULTY.MODERATE]: 2,
+  [DIFFICULTY.HARD]: 5,
+};

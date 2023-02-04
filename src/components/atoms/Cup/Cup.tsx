@@ -23,11 +23,7 @@ const Cup = ({
   startPosition,
 }: Props) => {
   const { gameState } = useGameState();
-  const tiltCup =
-    hasBall &&
-    (gameState === GAME_STATE.PLACING_BALL ||
-      gameState === GAME_STATE.WIN ||
-      gameState === GAME_STATE.LOSE);
+  const tiltCup = hasBall && gameState.revealBall;
 
   const handleGuess = () => onGuess(startPosition);
 
@@ -62,12 +58,13 @@ const Cup = ({
           transitionDuration: `${REVEAL_BALL_TRANSITION_SECONDS}s`,
           transform: `rotate(${tiltCup ? -30 : 0}deg)`,
         }}
-        disabled={gameState !== GAME_STATE.SHUFFLED}
+        disabled={!gameState.isGuessing}
         onClick={handleGuess}
       ></button>
       {/* only render ball when tilting, to prevent devtool element cheating */}
-      {gameState !== GAME_STATE.SHUFFLING &&
-        gameState !== GAME_STATE.SHUFFLED && <Ball />}
+      {hasBall &&
+        gameState.gamePhase !== GAME_STATE.SHUFFLING &&
+        gameState.gamePhase !== GAME_STATE.SHUFFLED && <Ball />}
     </div>
   );
 };

@@ -4,6 +4,7 @@ import {
   GAME_STATE,
   useGameState,
 } from "../../../contexts/gameState/gameStateProvider";
+import StartButton from "../../atoms/StartButton";
 
 type Props = {
   setDifficulty: Dispatch<SetStateAction<difficultyType>>;
@@ -11,9 +12,10 @@ type Props = {
 };
 
 const Controls = ({ setDifficulty, difficulty }: Props) => {
-  const { gameState, setGameState } = useGameState();
+  const { gameState, dispatch } = useGameState();
 
-  const handleStartGame = () => setGameState(GAME_STATE.START);
+  const handleStartGame = () =>
+    dispatch({ type: "changePhase", phase: GAME_STATE.START });
 
   const handleChangeDifficulty = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -26,16 +28,21 @@ const Controls = ({ setDifficulty, difficulty }: Props) => {
     []
   );
 
-  const isControlDisabled =
-    gameState !== GAME_STATE.IDLE &&
-    gameState !== GAME_STATE.WIN &&
-    gameState !== GAME_STATE.LOSE;
+  const isControlDisabled = gameState.isPlaying || gameState.isGuessing;
+
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "baseline",
+        gap: 20,
+      }}
+    >
       <div>
-        <button disabled={isControlDisabled} onClick={handleStartGame}>
+        <StartButton disabled={isControlDisabled} onClick={handleStartGame}>
           Start game
-        </button>
+        </StartButton>
       </div>
       <div>
         <select
