@@ -7,7 +7,7 @@ import { REVEAL_BALL_TRANSITION_SECONDS } from "../../../constants/animationDura
 
 type Props = {
   position: 0 | 1 | 2;
-  onGuess: () => void;
+  onGuess: (initialPosition: number) => void;
   startPosition: 0 | 1 | 2;
   hasBall: boolean;
   moveSpeed: number;
@@ -20,6 +20,7 @@ const Cup = ({
   onGuess,
   numberOfCups,
   moveSpeed,
+  startPosition,
 }: Props) => {
   const { gameState } = useGameState();
   const tiltCup =
@@ -27,6 +28,8 @@ const Cup = ({
     (gameState === GAME_STATE.PLACING_BALL ||
       gameState === GAME_STATE.WIN ||
       gameState === GAME_STATE.LOSE);
+
+  const handleGuess = () => onGuess(startPosition);
 
   return (
     <div
@@ -60,7 +63,7 @@ const Cup = ({
           transform: `rotate(${tiltCup ? -30 : 0}deg)`,
         }}
         disabled={gameState !== GAME_STATE.SHUFFLED}
-        onClick={onGuess}
+        onClick={handleGuess}
       ></button>
       {/* only render ball when tilting, to prevent devtool element cheating */}
       {gameState !== GAME_STATE.SHUFFLING &&

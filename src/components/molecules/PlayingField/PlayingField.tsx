@@ -41,15 +41,18 @@ const PlayingField = ({ difficulty }: Props) => {
   const makeAllShuffles = () =>
     new Promise<void>((res) => {
       setGameState(GAME_STATE.SHUFFLING);
+
       for (
         let shuffleNumber = 0;
         shuffleNumber < NUMBER_OF_MOVES[difficulty];
         shuffleNumber++
       ) {
+        // pass through complete cb when shuffle is the last
         const onComplete =
           shuffleNumber === NUMBER_OF_MOVES[difficulty] - 1
             ? () => setTimeout(res, MOVE_SPEED[difficulty])
             : null;
+
         setTimeout(
           makeAShuffle(onComplete),
           MOVE_SPEED[difficulty] * shuffleNumber
@@ -89,7 +92,7 @@ const PlayingField = ({ difficulty }: Props) => {
     if (gameState === GAME_STATE.START) startGame();
   }, [gameState]);
 
-  const handleOnGuess = (initialPositionGuess: number) => () =>
+  const handleOnGuess = (initialPositionGuess: number) =>
     setGameState(
       initialPositionGuess === ballPosition ? GAME_STATE.WIN : GAME_STATE.LOSE
     );
@@ -108,7 +111,7 @@ const PlayingField = ({ difficulty }: Props) => {
       <div style={{ position: "relative", height: "250px", width: "100%" }}>
         {cupPositions.map((position, initialPosition) => (
           <Cup
-            onGuess={handleOnGuess(initialPosition)}
+            onGuess={handleOnGuess}
             key={initialPosition}
             position={position}
             numberOfCups={cupPositions.length}
