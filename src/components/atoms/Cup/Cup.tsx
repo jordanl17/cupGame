@@ -1,17 +1,21 @@
+import {
+  GAME_STATE,
+  useGameState,
+} from "../../../contexts/gameState/gameStateProvider";
 import Ball from "../Ball";
 
 type Props = {
   position: 0 | 1 | 2;
   onGuess: () => void;
   startPosition: 0 | 1 | 2;
-  isShuffling: boolean;
-  isPlacingBall: boolean;
   hasBall: boolean;
-  hasGuessed: boolean;
 };
 
-const Cup = (props: Props) => {
-  const tiltCup = props.hasBall && (props.isPlacingBall || props.hasGuessed);
+const Cup = ({ hasBall, position, onGuess }: Props) => {
+  const { gameState } = useGameState();
+  const tiltCup =
+    hasBall &&
+    (gameState === GAME_STATE.PLACING_BALL || gameState === GAME_STATE.GUESSED);
 
   return (
     <div
@@ -19,7 +23,7 @@ const Cup = (props: Props) => {
         position: "absolute",
         width: "calc(100vw/6)",
         height: "100%",
-        left: `calc((200vw/6) * ${props.position})`,
+        left: `calc((200vw/6) * ${position})`,
         transition: "left 1s ease",
         display: "flex",
         justifyContent: "center",
@@ -44,8 +48,8 @@ const Cup = (props: Props) => {
           transitionDuration: "0.5s",
           transform: `rotate(${tiltCup ? -30 : 0}deg)`,
         }}
-        disabled={props.isShuffling}
-        onClick={props.onGuess}
+        disabled={gameState === GAME_STATE.SHUFFLING}
+        onClick={onGuess}
       ></button>
       {/* only show cup when tilting, to prevent devtool element cheating */}
       {tiltCup && <Ball />}

@@ -1,4 +1,8 @@
 import { useEffect, useState } from "react";
+import {
+  GAME_STATE,
+  useGameState,
+} from "../../../contexts/gameState/gameStateProvider";
 
 import Cup from "../../atoms/Cup";
 
@@ -26,8 +30,6 @@ const MOVE_SPEED: Record<difficultyType, number> = {
 
 const PlayingField = (props: Props) => {
   const [difficulty, setDifficulty] = useState<difficultyType>(DIFFICULTY.EASY);
-  const [isShuffling, setIsShuffling] = useState(false);
-  const [isPlacingBall, setIsPlacingBall] = useState(false);
   const [cupPositions, setCupPositions] = useState<(0 | 1 | 2)[]>([0, 1, 2]);
   const [ballPosition, setBallPosition] = useState<number | null>(null);
   const [gameStatus, setGameStatus] = useState<"WIN" | "LOSE" | undefined>();
@@ -53,26 +55,25 @@ const PlayingField = (props: Props) => {
   };
 
   const makeAShuffle = (onComplete: (() => void) | null) => () => {
-    console.log("shuffle");
     setCupPositions((currentCupPositions) =>
       generatePositions(currentCupPositions)
     );
+
     if (onComplete) onComplete();
   };
 
   const makeAllShuffles = () =>
     new Promise<void>((res) => {
+      setGameState(GAME_STATE.SHUFFLING);
       for (
         let shuffleNumber = 0;
         shuffleNumber < NUMBER_OF_MOVES[difficulty];
         shuffleNumber++
       ) {
-        console.log(
-          shuffleNumber,
-          shuffleNumber === NUMBER_OF_MOVES[difficulty] - 1
-        );
         const onComplete =
-          shuffleNumber === NUMBER_OF_MOVES[difficulty] - 1 ? res : null;
+          shuffleNumber === NUMBER_OF_MOVES[difficulty] - 1
+            ? () => setTimeout(res, 1000)
+            : null;
         setTimeout(
           makeAShuffle(onComplete),
           MOVE_SPEED[difficulty] * shuffleNumber
@@ -82,40 +83,31 @@ const PlayingField = (props: Props) => {
 
   const placeBall = () =>
     new Promise<void>((res) => {
-      setIsPlacingBall(true);
+      setGameState(GAME_STATE.PLACING_BALL);
       const ballCupPosition = Math.floor(Math.random() * 3);
       setBallPosition(ballCupPosition);
       setTimeout(() => {
-        setIsPlacingBall(false);
+        setGameState(GAME_STATE.PLACED_BALL);
         res();
       }, 1000);
     });
+
+  const { gameState, setGameState } = useGameState();
 
   const delay = (timeout: number) =>
     new Promise((res) => setTimeout(res, timeout));
 
   const handleStartGame = async () => {
+    setGameState(GAME_STATE.IDLE);
     setGameStatus(undefined);
     await placeBall();
     await delay(500);
-    setIsShuffling(true);
     await makeAllShuffles();
-    setIsShuffling(false);
+    setGameState(GAME_STATE.SHUFFLED);
   };
 
-  useEffect(() => {
-    if (!isShuffling) {
-      console.log(
-        "ball was initially under cup",
-        ballPosition,
-        "and now that cup is",
-        cupPositions[ballPosition!]
-      );
-      console.log(cupPositions);
-    }
-  }, [isShuffling, ballPosition, cupPositions]);
-
   const handleOnGuess = (initialPositionGuess: number) => () => {
+    setGameState(GAME_STATE.GUESSED);
     setGameStatus(initialPositionGuess === ballPosition ? "WIN" : "LOSE");
   };
 
@@ -137,37 +129,40 @@ const PlayingField = (props: Props) => {
         gap: 20,
       }}
     >
+      <div>{gameState}</div>
       <div style={{ position: "relative", height: "250px", width: "100%" }}>
         {cupPositions.map((position, initialPosition) => (
           <Cup
             onGuess={handleOnGuess(initialPosition)}
-            isShuffling={isShuffling}
             key={initialPosition}
             position={position}
             startPosition={initialPosition as 0 | 1 | 2}
-            isPlacingBall={isPlacingBall}
             hasBall={ballPosition === initialPosition}
-            hasGuessed={!!gameStatus}
           />
         ))}
       </div>
       <div>
-        <button disabled={isShuffling} onClick={handleStartGame}>
+        <button
+          disabled={
+            gameState !== GAME_STATE.IDLE && gameState !== GAME_STATE.GUESSED
+          }
+          onClick={handleStartGame}
+        >
           Start game
         </button>
       </div>
       <div>
         <select
-          disabled={isShuffling}
+          disabled={
+            gameState !== GAME_STATE.IDLE && gameState !== GAME_STATE.GUESSED
+          }
+          defaultValue={difficulty}
           name="difficulty"
           id="difficulty"
           onChange={handleChangeDifficulty}
         >
           {Object.values(DIFFICULTY).map((difficultyOption) => (
-            <option
-              selected={difficulty === difficultyOption}
-              value={difficultyOption}
-            >
+            <option key={difficultyOption} value={difficultyOption}>
               {difficultyOption}
             </option>
           ))}
