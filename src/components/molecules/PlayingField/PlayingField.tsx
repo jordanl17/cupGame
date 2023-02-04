@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import {
+  PAUSE_BETWEEN_GAME_PHASES,
+  REVEAL_BALL_TRANSITION_MS,
+} from "../../../constants/animationDurations";
+import {
   difficultyType,
   MOVE_SPEED,
   NUMBER_OF_MOVES,
@@ -10,40 +14,25 @@ import {
 } from "../../../contexts/gameState/gameStateProvider";
 
 import Cup from "../../atoms/Cup";
+import randomiseCupPositions, {
+  cupPositionsType,
+  INITIAL_CUP_POSITIONS,
+} from "./cupPositionUtil";
 
 type Props = {
   difficulty: difficultyType;
 };
 
-type cupPositionsType = (0 | 1 | 2)[];
-
 const PlayingField = ({ difficulty }: Props) => {
-  const [cupPositions, setCupPositions] = useState<cupPositionsType>([0, 1, 2]);
+  const [cupPositions, setCupPositions] = useState<cupPositionsType>(
+    INITIAL_CUP_POSITIONS
+  );
   const [ballPosition, setBallPosition] = useState<number | null>(null);
-
-  // TODO: make this better for 4,5,6 number of cups
-  const generatePositions = (
-    currentCupPositions: cupPositionsType
-  ): cupPositionsType => {
-    const firstCup = Math.floor(Math.random() * 3);
-    const remainingPositions = [0, 1, 2].filter((el) => el !== firstCup);
-    const [secondCup, thirdCup] = Math.round(Math.random())
-      ? remainingPositions.reverse()
-      : remainingPositions;
-
-    const newPositions = [firstCup, secondCup, thirdCup] as cupPositionsType;
-
-    const isNewPositionsVoidMove = currentCupPositions.every(
-      (currentPosition, index) => newPositions[index] === currentPosition
-    );
-
-    if (isNewPositionsVoidMove) return generatePositions(currentCupPositions);
-    return newPositions;
-  };
+  const { gameState, setGameState } = useGameState();
 
   const makeAShuffle = (onComplete: (() => void) | null) => () => {
     setCupPositions((currentCupPositions) =>
-      generatePositions(currentCupPositions)
+      randomiseCupPositions(currentCupPositions)
     );
 
     if (onComplete) onComplete();
@@ -59,7 +48,7 @@ const PlayingField = ({ difficulty }: Props) => {
       ) {
         const onComplete =
           shuffleNumber === NUMBER_OF_MOVES[difficulty] - 1
-            ? () => setTimeout(res, 1000)
+            ? () => setTimeout(res, MOVE_SPEED[difficulty])
             : null;
         setTimeout(
           makeAShuffle(onComplete),
@@ -76,18 +65,22 @@ const PlayingField = ({ difficulty }: Props) => {
       setTimeout(() => {
         setGameState(GAME_STATE.PLACED_BALL);
         res();
-      }, 1000);
+      }, REVEAL_BALL_TRANSITION_MS * 2);
     });
-
-  const { gameState, setGameState } = useGameState();
 
   const delay = (timeout: number) =>
     new Promise((res) => setTimeout(res, timeout));
 
   const startGame = async () => {
-    setGameState(GAME_STATE.IDLE);
+    if (gameState !== GAME_STATE.IDLE) {
+      // reset game is this isn't the first time
+      setGameState(GAME_STATE.IDLE);
+      // brief pause to reset all cup tilts
+      await delay(PAUSE_BETWEEN_GAME_PHASES);
+    }
+
     await placeBall();
-    await delay(500);
+    await delay(PAUSE_BETWEEN_GAME_PHASES);
     await makeAllShuffles();
     setGameState(GAME_STATE.SHUFFLED);
   };
@@ -96,11 +89,10 @@ const PlayingField = ({ difficulty }: Props) => {
     if (gameState === GAME_STATE.START) startGame();
   }, [gameState]);
 
-  const handleOnGuess = (initialPositionGuess: number) => () => {
+  const handleOnGuess = (initialPositionGuess: number) => () =>
     setGameState(
       initialPositionGuess === ballPosition ? GAME_STATE.WIN : GAME_STATE.LOSE
     );
-  };
 
   return (
     <div
@@ -122,6 +114,7 @@ const PlayingField = ({ difficulty }: Props) => {
             numberOfCups={cupPositions.length}
             startPosition={initialPosition as 0 | 1 | 2}
             hasBall={ballPosition === initialPosition}
+            moveSpeed={MOVE_SPEED[difficulty]}
           />
         ))}
       </div>

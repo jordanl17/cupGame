@@ -3,15 +3,24 @@ import {
   useGameState,
 } from "../../../contexts/gameState/gameStateProvider";
 import Ball from "../Ball";
+import { REVEAL_BALL_TRANSITION_SECONDS } from "../../../constants/animationDurations";
 
 type Props = {
   position: 0 | 1 | 2;
   onGuess: () => void;
   startPosition: 0 | 1 | 2;
   hasBall: boolean;
+  moveSpeed: number;
+  numberOfCups: number;
 };
 
-const Cup = ({ hasBall, position, onGuess, numberOfCups }: Props) => {
+const Cup = ({
+  hasBall,
+  position,
+  onGuess,
+  numberOfCups,
+  moveSpeed,
+}: Props) => {
   const { gameState } = useGameState();
   const tiltCup =
     hasBall &&
@@ -26,7 +35,7 @@ const Cup = ({ hasBall, position, onGuess, numberOfCups }: Props) => {
         width: `calc(100vw/${numberOfCups * 2})`,
         height: "100%",
         left: `calc((200vw/${numberOfCups * 2}) * ${position})`,
-        transition: "left 1s ease",
+        transition: `left ${moveSpeed / 1000}s ease`,
         display: "flex",
         justifyContent: "center",
       }}
@@ -44,16 +53,16 @@ const Cup = ({ hasBall, position, onGuess, numberOfCups }: Props) => {
           outline: "none",
           height: "250px",
           width: `calc(100vw/${numberOfCups * 2})`,
-          transition: "left 1s ease",
+          transition: `left ${moveSpeed / 1000}s ease`,
           transformOrigin: "bottom left",
           transitionProperty: tiltCup ? "transform" : "unset",
-          transitionDuration: "0.5s",
+          transitionDuration: `${REVEAL_BALL_TRANSITION_SECONDS}s`,
           transform: `rotate(${tiltCup ? -30 : 0}deg)`,
         }}
         disabled={gameState !== GAME_STATE.SHUFFLED}
         onClick={onGuess}
       ></button>
-      {/* only show cup when tilting, to prevent devtool element cheating */}
+      {/* only render ball when tilting, to prevent devtool element cheating */}
       {gameState !== GAME_STATE.SHUFFLING &&
         gameState !== GAME_STATE.SHUFFLED && <Ball />}
     </div>
