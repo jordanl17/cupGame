@@ -1,38 +1,23 @@
 import { useEffect, useState } from "react";
 import {
+  difficultyType,
+  MOVE_SPEED,
+  NUMBER_OF_MOVES,
+} from "../../../constants/difficulty";
+import {
   GAME_STATE,
   useGameState,
 } from "../../../contexts/gameState/gameStateProvider";
 
 import Cup from "../../atoms/Cup";
 
-type Props = {};
-
-const DIFFICULTY = {
-  EASY: "easy",
-  MODERATE: "moderate",
-  HARD: "hard",
-} as const;
-
-type difficultyType = typeof DIFFICULTY[keyof typeof DIFFICULTY];
-
-const NUMBER_OF_MOVES: Record<difficultyType, number> = {
-  [DIFFICULTY.EASY]: 5,
-  [DIFFICULTY.MODERATE]: 7,
-  [DIFFICULTY.HARD]: 10,
+type Props = {
+  difficulty: difficultyType;
 };
 
-const MOVE_SPEED: Record<difficultyType, number> = {
-  [DIFFICULTY.EASY]: 1000,
-  [DIFFICULTY.MODERATE]: 750,
-  [DIFFICULTY.HARD]: 500,
-};
-
-const PlayingField = (props: Props) => {
-  const [difficulty, setDifficulty] = useState<difficultyType>(DIFFICULTY.EASY);
+const PlayingField = ({ difficulty }: Props) => {
   const [cupPositions, setCupPositions] = useState<(0 | 1 | 2)[]>([0, 1, 2]);
   const [ballPosition, setBallPosition] = useState<number | null>(null);
-  const [gameStatus, setGameStatus] = useState<"WIN" | "LOSE" | undefined>();
 
   // TODO: make this better for 4,5,6 number of cups
   const generatePositions = (
@@ -97,26 +82,22 @@ const PlayingField = (props: Props) => {
   const delay = (timeout: number) =>
     new Promise((res) => setTimeout(res, timeout));
 
-  const handleStartGame = async () => {
+  const startGame = async () => {
     setGameState(GAME_STATE.IDLE);
-    setGameStatus(undefined);
     await placeBall();
     await delay(500);
     await makeAllShuffles();
     setGameState(GAME_STATE.SHUFFLED);
   };
 
+  useEffect(() => {
+    if (gameState === GAME_STATE.START) startGame();
+  }, [gameState]);
+
   const handleOnGuess = (initialPositionGuess: number) => () => {
-    setGameState(GAME_STATE.GUESSED);
-    setGameStatus(initialPositionGuess === ballPosition ? "WIN" : "LOSE");
-  };
-
-  const handleChangeDifficulty = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const {
-      target: { value },
-    } = e;
-
-    setDifficulty(value as difficultyType);
+    setGameState(
+      initialPositionGuess === ballPosition ? GAME_STATE.WIN : GAME_STATE.LOSE
+    );
   };
 
   return (
@@ -140,34 +121,6 @@ const PlayingField = (props: Props) => {
             hasBall={ballPosition === initialPosition}
           />
         ))}
-      </div>
-      <div>
-        <button
-          disabled={
-            gameState !== GAME_STATE.IDLE && gameState !== GAME_STATE.GUESSED
-          }
-          onClick={handleStartGame}
-        >
-          Start game
-        </button>
-      </div>
-      <div>
-        <select
-          disabled={
-            gameState !== GAME_STATE.IDLE && gameState !== GAME_STATE.GUESSED
-          }
-          defaultValue={difficulty}
-          name="difficulty"
-          id="difficulty"
-          onChange={handleChangeDifficulty}
-        >
-          {Object.values(DIFFICULTY).map((difficultyOption) => (
-            <option key={difficultyOption} value={difficultyOption}>
-              {difficultyOption}
-            </option>
-          ))}
-        </select>
-        <div>{gameStatus}</div>
       </div>
     </div>
   );

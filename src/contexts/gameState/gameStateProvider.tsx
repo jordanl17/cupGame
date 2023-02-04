@@ -7,12 +7,15 @@ import {
 } from "react";
 
 export const GAME_STATE = {
+  START: "start",
   IDLE: "idle",
   PLACING_BALL: "placingBall",
   PLACED_BALL: "placedBall",
   SHUFFLING: "shuffling",
   SHUFFLED: "shuffled",
   GUESSED: "guessed",
+  WIN: "win",
+  LOSE: "lose",
 } as const;
 
 type gameStateType = typeof GAME_STATE[keyof typeof GAME_STATE];
