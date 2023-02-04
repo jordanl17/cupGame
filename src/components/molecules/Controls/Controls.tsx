@@ -26,23 +26,20 @@ const Controls = ({ setDifficulty, difficulty }: Props) => {
     []
   );
 
+  const isControlDisabled =
+    gameState !== GAME_STATE.IDLE &&
+    gameState !== GAME_STATE.WIN &&
+    gameState !== GAME_STATE.LOSE;
   return (
     <div>
       <div>
-        <button
-          disabled={
-            gameState !== GAME_STATE.IDLE && gameState !== GAME_STATE.GUESSED
-          }
-          onClick={handleStartGame}
-        >
+        <button disabled={isControlDisabled} onClick={handleStartGame}>
           Start game
         </button>
       </div>
       <div>
         <select
-          disabled={
-            gameState !== GAME_STATE.IDLE && gameState !== GAME_STATE.GUESSED
-          }
+          disabled={isControlDisabled}
           defaultValue={difficulty}
           name="difficulty"
           id="difficulty"

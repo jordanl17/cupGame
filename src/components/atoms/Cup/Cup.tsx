@@ -11,19 +11,21 @@ type Props = {
   hasBall: boolean;
 };
 
-const Cup = ({ hasBall, position, onGuess }: Props) => {
+const Cup = ({ hasBall, position, onGuess, numberOfCups }: Props) => {
   const { gameState } = useGameState();
   const tiltCup =
     hasBall &&
-    (gameState === GAME_STATE.PLACING_BALL || gameState === GAME_STATE.GUESSED);
+    (gameState === GAME_STATE.PLACING_BALL ||
+      gameState === GAME_STATE.WIN ||
+      gameState === GAME_STATE.LOSE);
 
   return (
     <div
       style={{
         position: "absolute",
-        width: "calc(100vw/6)",
+        width: `calc(100vw/${numberOfCups * 2})`,
         height: "100%",
-        left: `calc((200vw/6) * ${position})`,
+        left: `calc((200vw/${numberOfCups * 2}) * ${position})`,
         transition: "left 1s ease",
         display: "flex",
         justifyContent: "center",
@@ -41,18 +43,19 @@ const Cup = ({ hasBall, position, onGuess }: Props) => {
           borderRight: "25px solid transparent",
           outline: "none",
           height: "250px",
-          width: "calc(100vw/6)",
+          width: `calc(100vw/${numberOfCups * 2})`,
           transition: "left 1s ease",
           transformOrigin: "bottom left",
           transitionProperty: tiltCup ? "transform" : "unset",
           transitionDuration: "0.5s",
           transform: `rotate(${tiltCup ? -30 : 0}deg)`,
         }}
-        disabled={gameState === GAME_STATE.SHUFFLING}
+        disabled={gameState !== GAME_STATE.SHUFFLED}
         onClick={onGuess}
       ></button>
       {/* only show cup when tilting, to prevent devtool element cheating */}
-      {tiltCup && <Ball />}
+      {gameState !== GAME_STATE.SHUFFLING &&
+        gameState !== GAME_STATE.SHUFFLED && <Ball />}
     </div>
   );
 };

@@ -15,21 +15,23 @@ type Props = {
   difficulty: difficultyType;
 };
 
+type cupPositionsType = (0 | 1 | 2)[];
+
 const PlayingField = ({ difficulty }: Props) => {
-  const [cupPositions, setCupPositions] = useState<(0 | 1 | 2)[]>([0, 1, 2]);
+  const [cupPositions, setCupPositions] = useState<cupPositionsType>([0, 1, 2]);
   const [ballPosition, setBallPosition] = useState<number | null>(null);
 
   // TODO: make this better for 4,5,6 number of cups
   const generatePositions = (
-    currentCupPositions: (0 | 2 | 1)[]
-  ): (0 | 1 | 2)[] => {
+    currentCupPositions: cupPositionsType
+  ): cupPositionsType => {
     const firstCup = Math.floor(Math.random() * 3);
     const remainingPositions = [0, 1, 2].filter((el) => el !== firstCup);
     const [secondCup, thirdCup] = Math.round(Math.random())
       ? remainingPositions.reverse()
       : remainingPositions;
 
-    const newPositions = [firstCup, secondCup, thirdCup] as (0 | 1 | 2)[];
+    const newPositions = [firstCup, secondCup, thirdCup] as cupPositionsType;
 
     const isNewPositionsVoidMove = currentCupPositions.every(
       (currentPosition, index) => newPositions[index] === currentPosition
@@ -117,6 +119,7 @@ const PlayingField = ({ difficulty }: Props) => {
             onGuess={handleOnGuess(initialPosition)}
             key={initialPosition}
             position={position}
+            numberOfCups={cupPositions.length}
             startPosition={initialPosition as 0 | 1 | 2}
             hasBall={ballPosition === initialPosition}
           />
