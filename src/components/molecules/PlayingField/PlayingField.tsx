@@ -10,25 +10,22 @@ const DIFFICULTY = {
   HARD: "hard",
 } as const;
 
-const NUMBER_OF_MOVES: Record<
-  typeof DIFFICULTY[keyof typeof DIFFICULTY],
-  number
-> = {
+type difficultyType = typeof DIFFICULTY[keyof typeof DIFFICULTY];
+
+const NUMBER_OF_MOVES: Record<difficultyType, number> = {
   [DIFFICULTY.EASY]: 5,
   [DIFFICULTY.MODERATE]: 7,
   [DIFFICULTY.HARD]: 10,
 };
 
-const MOVE_SPEED: Record<typeof DIFFICULTY[keyof typeof DIFFICULTY], number> = {
+const MOVE_SPEED: Record<difficultyType, number> = {
   [DIFFICULTY.EASY]: 1000,
   [DIFFICULTY.MODERATE]: 750,
   [DIFFICULTY.HARD]: 500,
 };
 
 const PlayingField = (props: Props) => {
-  const [difficulty, setDifficulty] = useState<
-    typeof DIFFICULTY[keyof typeof DIFFICULTY]
-  >(DIFFICULTY.EASY);
+  const [difficulty, setDifficulty] = useState<difficultyType>(DIFFICULTY.EASY);
   const [isShuffling, setIsShuffling] = useState(false);
   const [isPlacingBall, setIsPlacingBall] = useState(false);
   const [cupPositions, setCupPositions] = useState<(0 | 1 | 2)[]>([0, 1, 2]);
@@ -122,6 +119,14 @@ const PlayingField = (props: Props) => {
     setGameStatus(initialPositionGuess === ballPosition ? "WIN" : "LOSE");
   };
 
+  const handleChangeDifficulty = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const {
+      target: { value },
+    } = e;
+
+    setDifficulty(value as difficultyType);
+  };
+
   return (
     <div
       style={{
@@ -150,6 +155,23 @@ const PlayingField = (props: Props) => {
         <button disabled={isShuffling} onClick={handleStartGame}>
           Start game
         </button>
+      </div>
+      <div>
+        <select
+          disabled={isShuffling}
+          name="difficulty"
+          id="difficulty"
+          onChange={handleChangeDifficulty}
+        >
+          {Object.values(DIFFICULTY).map((difficultyOption) => (
+            <option
+              selected={difficulty === difficultyOption}
+              value={difficultyOption}
+            >
+              {difficultyOption}
+            </option>
+          ))}
+        </select>
         <div>{gameStatus}</div>
       </div>
     </div>
