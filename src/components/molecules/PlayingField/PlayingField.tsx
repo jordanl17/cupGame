@@ -30,6 +30,7 @@ const PlayingField = (props: Props) => {
     typeof DIFFICULTY[keyof typeof DIFFICULTY]
   >(DIFFICULTY.EASY);
   const [isShuffling, setIsShuffling] = useState(false);
+  const [isPlacingBall, setIsPlacingBall] = useState(false);
   const [cupPositions, setCupPositions] = useState<(0 | 1 | 2)[]>([0, 1, 2]);
   const [ballPosition, setBallPosition] = useState<number | null>(null);
   const [gameStatus, setGameStatus] = useState<"WIN" | "LOSE" | undefined>();
@@ -82,9 +83,23 @@ const PlayingField = (props: Props) => {
       }
     });
 
+  const placeBall = () =>
+    new Promise<void>((res) => {
+      setIsPlacingBall(true);
+      const ballCupPosition = Math.floor(Math.random() * 3);
+      setBallPosition(ballCupPosition);
+      setTimeout(() => {
+        setIsPlacingBall(false);
+        res();
+      }, 1000);
+    });
+
+  const delay = (timeout: number) =>
+    new Promise((res) => setTimeout(res, timeout));
+
   const handleStartGame = async () => {
-    const ballCupPosition = Math.floor(Math.random() * 3);
-    setBallPosition(ballCupPosition);
+    await placeBall();
+    await delay(500);
     setIsShuffling(true);
     await makeAllShuffles();
     setIsShuffling(false);
@@ -124,6 +139,9 @@ const PlayingField = (props: Props) => {
             key={initialPosition}
             position={position}
             startPosition={initialPosition as 0 | 1 | 2}
+            isPlacingBall={isPlacingBall}
+            hasBall={ballPosition === initialPosition}
+            hasGuessed={!!gameStatus}
           />
         ))}
       </div>
