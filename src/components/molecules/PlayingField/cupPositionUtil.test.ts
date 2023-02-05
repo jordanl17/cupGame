@@ -8,7 +8,7 @@ describe("randomiseCupPositions", () => {
   });
 
   test("will give cup positions for 3 cups", () => {
-    mockRandom.mockReturnValueOnce(1).mockReturnValueOnce(1);
+    mockRandom.mockReturnValueOnce(0.99).mockReturnValueOnce(0.99);
 
     const result = randomiseCupPositions([0, 1, 2]);
 
@@ -23,7 +23,7 @@ describe("randomiseCupPositions", () => {
       // make second cup go to position 1; third cup go to position 2
       .mockReturnValueOnce(0)
       // this is same as input - make second iteration move first cup to position 2
-      .mockReturnValueOnce(1)
+      .mockReturnValueOnce(0.99)
       // make second cup go to position 1, third cup to go position 0
       .mockReturnValueOnce(0);
 

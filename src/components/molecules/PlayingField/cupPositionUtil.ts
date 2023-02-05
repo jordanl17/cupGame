@@ -6,7 +6,7 @@ export const INITIAL_CUP_POSITIONS: cupPositionsType = [0, 1, 2];
 const randomiseCupPositions = (
   currentCupPositions: cupPositionsType
 ): cupPositionsType => {
-  const firstCup = Math.floor(Math.random() * 2);
+  const firstCup = Math.floor(Math.random() * 3);
   const remainingPositions = [0, 1, 2].filter((el) => el !== firstCup);
   const [secondCup, thirdCup] = Math.round(Math.random())
     ? remainingPositions.reverse()
