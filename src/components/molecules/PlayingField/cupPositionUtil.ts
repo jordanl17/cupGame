@@ -1,6 +1,9 @@
-export type cupPositionsType = (0 | 1 | 2)[];
+export type cupPositionsType = number[];
 
-export const INITIAL_CUP_POSITIONS: cupPositionsType = [0, 1, 2];
+export const generateInitialCupPositions = (numberOfCups: number) =>
+  Array(numberOfCups)
+    .fill(undefined)
+    .map((_, index) => index);
 
 // TODO: make this better for 4,5,6 number of cups
 const randomiseCupPositions = (

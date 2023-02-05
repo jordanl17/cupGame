@@ -4,9 +4,9 @@ import { REVEAL_BALL_TRANSITION_SECONDS } from "../../../constants/animationDura
 import { GAME_PHASE } from "../../../constants/gamePhases";
 
 export type Props = {
-  position: 0 | 1 | 2;
+  position: number;
   onGuess: (initialPosition: number) => void;
-  startPosition: 0 | 1 | 2;
+  startPosition: number;
   hasBall: boolean;
   moveSpeed: number;
   numberOfCups: number;
@@ -25,6 +25,23 @@ const Cup = ({
 
   const handleGuess = () => onGuess(startPosition);
 
+  /**
+   * only render ball when tilting, to prevent devtool element cheating
+   * NOTE: 'shuffled' phase is equivalent to 'ready to guess'
+   */
+  const canRenderBall =
+    hasBall &&
+    gameState.gamePhase !== GAME_PHASE.SHUFFLING &&
+    gameState.gamePhase !== GAME_PHASE.SHUFFLED;
+
+  const horizontalMoveTransition = `left ${moveSpeed / 1000}s ease`;
+  const revealBallTransition = `transform ${REVEAL_BALL_TRANSITION_SECONDS}s ease`;
+
+  const transition = [
+    horizontalMoveTransition,
+    canRenderBall && revealBallTransition,
+  ].join(", ");
+
   return (
     <div
       style={{
@@ -32,7 +49,7 @@ const Cup = ({
         width: `calc(100vw/${numberOfCups * 2})`,
         height: "100%",
         left: `calc(200vw * ${(position / (numberOfCups * 2)).toFixed(2)})`,
-        transition: `left ${moveSpeed / 1000}s ease`,
+        transition: horizontalMoveTransition,
         display: "flex",
         justifyContent: "center",
       }}
@@ -51,20 +68,14 @@ const Cup = ({
           outline: "none",
           height: "250px",
           width: `calc(100vw/${numberOfCups * 2})`,
-          transition: `left ${moveSpeed / 1000}s ease`,
+          transition,
           transformOrigin: "bottom left",
-          transitionProperty: tiltCup ? "transform" : "unset",
-          transitionDuration: `${REVEAL_BALL_TRANSITION_SECONDS}s`,
           transform: `rotate(${tiltCup ? -30 : 0}deg)`,
         }}
         disabled={!gameState.isGuessing}
         onClick={handleGuess}
       ></button>
-      {/* only render ball when tilting, to prevent devtool element cheating */}
-      {/* NOTE: shuffled phase is equivalent to 'ready to guess' */}
-      {hasBall &&
-        gameState.gamePhase !== GAME_PHASE.SHUFFLING &&
-        gameState.gamePhase !== GAME_PHASE.SHUFFLED && <Ball />}
+      {canRenderBall && <Ball />}
     </div>
   );
 };

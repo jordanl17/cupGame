@@ -14,7 +14,7 @@ import { useGameState } from "../../../contexts/gameState/gameStateProvider";
 import Cup from "../../atoms/Cup";
 import randomiseCupPositions, {
   cupPositionsType,
-  INITIAL_CUP_POSITIONS,
+  generateInitialCupPositions,
 } from "./cupPositionUtil";
 
 type Props = {
@@ -26,7 +26,7 @@ const delay = (timeout: number) =>
 
 const PlayingField = ({ difficulty }: Props) => {
   const [cupPositions, setCupPositions] = useState<cupPositionsType>(
-    INITIAL_CUP_POSITIONS
+    generateInitialCupPositions(3)
   );
   const [ballPosition, setBallPosition] = useState<number | null>(null);
   const { gameState, dispatch } = useGameState();
