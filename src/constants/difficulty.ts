@@ -23,3 +23,9 @@ export const POINTS: Record<difficultyType, number> = {
   [DIFFICULTY.MODERATE]: 2,
   [DIFFICULTY.HARD]: 5,
 };
+
+export const NUMBER_OF_CUPS: Record<difficultyType, number> = {
+  [DIFFICULTY.EASY]: 3,
+  [DIFFICULTY.MODERATE]: 3,
+  [DIFFICULTY.HARD]: 4,
+};

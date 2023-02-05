@@ -4,6 +4,7 @@ import {
   REVEAL_BALL_TRANSITION_MS,
 } from "../../../constants/animationDurations";
 import {
+  DIFFICULTY,
   difficultyType,
   MOVE_SPEED,
   NUMBER_OF_MOVES,
@@ -12,10 +13,11 @@ import { GAME_PHASE } from "../../../constants/gamePhases";
 import { useGameState } from "../../../contexts/gameState/gameStateProvider";
 
 import Cup from "../../atoms/Cup";
-import randomiseCupPositions, {
+import { applyShuffleStrategy } from "./utils/difficultyStrategies";
+import {
   cupPositionsType,
   generateInitialCupPositions,
-} from "./cupPositionUtil";
+} from "./utils/shuffleStrategies";
 
 type Props = {
   difficulty: difficultyType;
@@ -26,14 +28,14 @@ const delay = (timeout: number) =>
 
 const PlayingField = ({ difficulty }: Props) => {
   const [cupPositions, setCupPositions] = useState<cupPositionsType>(
-    generateInitialCupPositions(3)
+    generateInitialCupPositions(difficulty)
   );
   const [ballPosition, setBallPosition] = useState<number | null>(null);
   const { gameState, dispatch } = useGameState();
 
   const makeAShuffle = (onComplete: (() => void) | null) => () => {
     setCupPositions((currentCupPositions) =>
-      randomiseCupPositions(currentCupPositions)
+      applyShuffleStrategy(difficulty, currentCupPositions)
     );
 
     if (onComplete) onComplete();
@@ -89,6 +91,10 @@ const PlayingField = ({ difficulty }: Props) => {
   useEffect(() => {
     if (gameState.gamePhase === GAME_PHASE.START) startGame();
   }, [gameState]);
+
+  useEffect(() => {
+    setCupPositions(generateInitialCupPositions(difficulty));
+  }, [difficulty]);
 
   const handleOnGuess = (initialPositionGuess: number) =>
     dispatch({
