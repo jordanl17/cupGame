@@ -2,4 +2,5 @@ body,
 button,
 select {
   font-family: "Unbounded", sans-serif;
+  background-color: #e3daff;
 }

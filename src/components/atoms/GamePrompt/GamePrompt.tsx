@@ -1,17 +1,15 @@
-import {
-  GAME_STATE,
-  useGameState,
-} from "../../../contexts/gameState/gameStateProvider";
+import { GAME_PHASE } from "../../../constants/gamePhases";
+import { useGameState } from "../../../contexts/gameState/gameStateProvider";
 
 const GamePrompt = () => {
   const { gameState } = useGameState();
 
   const renderPrompt = () => {
-    if (gameState.gamePhase === GAME_STATE.PLACING_BALL) {
+    if (gameState.gamePhase === GAME_PHASE.PLACING_BALL) {
       return <h1>WATCH THE BALL...</h1>;
     }
 
-    if (gameState.gamePhase === GAME_STATE.SHUFFLING) {
+    if (gameState.gamePhase === GAME_PHASE.SHUFFLING) {
       return <h1>SHUFFLING THE CUPS...</h1>;
     }
 
@@ -19,11 +17,11 @@ const GamePrompt = () => {
       return <h1>GUESS A CUP</h1>;
     }
 
-    if (gameState.gamePhase === GAME_STATE.WIN) {
+    if (gameState.gamePhase === GAME_PHASE.WIN) {
       return <h1>YOU WON: YOU HAVE {gameState.points} points</h1>;
     }
 
-    if (gameState.gamePhase === GAME_STATE.LOSE) {
+    if (gameState.gamePhase === GAME_PHASE.LOSE) {
       return <h1>YOU LOST: YOU HAVE {gameState.points} points</h1>;
     }
   };

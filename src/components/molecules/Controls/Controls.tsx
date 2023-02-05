@@ -1,9 +1,7 @@
 import { Dispatch, SetStateAction, useCallback } from "react";
 import { DIFFICULTY, difficultyType } from "../../../constants/difficulty";
-import {
-  GAME_STATE,
-  useGameState,
-} from "../../../contexts/gameState/gameStateProvider";
+import { GAME_PHASE } from "../../../constants/gamePhases";
+import { useGameState } from "../../../contexts/gameState/gameStateProvider";
 import StartButton from "../../atoms/StartButton";
 
 type Props = {
@@ -15,7 +13,7 @@ const Controls = ({ setDifficulty, difficulty }: Props) => {
   const { gameState, dispatch } = useGameState();
 
   const handleStartGame = () =>
-    dispatch({ type: "changePhase", phase: GAME_STATE.START });
+    dispatch({ type: "changePhase", phase: GAME_PHASE.START });
 
   const handleChangeDifficulty = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {

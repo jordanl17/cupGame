@@ -1,9 +1,7 @@
-import {
-  GAME_STATE,
-  useGameState,
-} from "../../../contexts/gameState/gameStateProvider";
+import { useGameState } from "../../../contexts/gameState/gameStateProvider";
 import Ball from "../Ball";
 import { REVEAL_BALL_TRANSITION_SECONDS } from "../../../constants/animationDurations";
+import { GAME_PHASE } from "../../../constants/gamePhases";
 
 type Props = {
   position: 0 | 1 | 2;
@@ -63,8 +61,8 @@ const Cup = ({
       ></button>
       {/* only render ball when tilting, to prevent devtool element cheating */}
       {hasBall &&
-        gameState.gamePhase !== GAME_STATE.SHUFFLING &&
-        gameState.gamePhase !== GAME_STATE.SHUFFLED && <Ball />}
+        gameState.gamePhase !== GAME_PHASE.SHUFFLING &&
+        gameState.gamePhase !== GAME_PHASE.SHUFFLED && <Ball />}
     </div>
   );
 };

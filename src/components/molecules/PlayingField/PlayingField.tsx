@@ -8,10 +8,8 @@ import {
   MOVE_SPEED,
   NUMBER_OF_MOVES,
 } from "../../../constants/difficulty";
-import {
-  GAME_STATE,
-  useGameState,
-} from "../../../contexts/gameState/gameStateProvider";
+import { GAME_PHASE } from "../../../constants/gamePhases";
+import { useGameState } from "../../../contexts/gameState/gameStateProvider";
 
 import Cup from "../../atoms/Cup";
 import randomiseCupPositions, {
@@ -40,7 +38,7 @@ const PlayingField = ({ difficulty }: Props) => {
 
   const makeAllShuffles = () =>
     new Promise<void>((res) => {
-      dispatch({ type: "changePhase", phase: GAME_STATE.SHUFFLING });
+      dispatch({ type: "changePhase", phase: GAME_PHASE.SHUFFLING });
 
       for (
         let shuffleNumber = 0;
@@ -62,11 +60,11 @@ const PlayingField = ({ difficulty }: Props) => {
 
   const placeBall = () =>
     new Promise<void>((res) => {
-      dispatch({ type: "changePhase", phase: GAME_STATE.PLACING_BALL });
+      dispatch({ type: "changePhase", phase: GAME_PHASE.PLACING_BALL });
       const ballCupPosition = Math.floor(Math.random() * 3);
       setBallPosition(ballCupPosition);
       setTimeout(() => {
-        dispatch({ type: "changePhase", phase: GAME_STATE.PLACED_BALL });
+        dispatch({ type: "changePhase", phase: GAME_PHASE.PLACED_BALL });
         res();
       }, REVEAL_BALL_TRANSITION_MS * 2);
     });
@@ -75,9 +73,9 @@ const PlayingField = ({ difficulty }: Props) => {
     new Promise((res) => setTimeout(res, timeout));
 
   const startGame = async () => {
-    if (gameState.gamePhase !== GAME_STATE.IDLE) {
+    if (gameState.gamePhase !== GAME_PHASE.IDLE) {
       // reset game is this isn't the first time
-      dispatch({ type: "changePhase", phase: GAME_STATE.IDLE });
+      dispatch({ type: "changePhase", phase: GAME_PHASE.IDLE });
       // brief pause to reset all cup tilts
       await delay(PAUSE_BETWEEN_GAME_PHASES);
     }
@@ -85,11 +83,11 @@ const PlayingField = ({ difficulty }: Props) => {
     await placeBall();
     await delay(PAUSE_BETWEEN_GAME_PHASES);
     await makeAllShuffles();
-    dispatch({ type: "changePhase", phase: GAME_STATE.SHUFFLED });
+    dispatch({ type: "changePhase", phase: GAME_PHASE.SHUFFLED });
   };
 
   useEffect(() => {
-    if (gameState.gamePhase === GAME_STATE.START) startGame();
+    if (gameState.gamePhase === GAME_PHASE.START) startGame();
   }, [gameState]);
 
   const handleOnGuess = (initialPositionGuess: number) =>
@@ -106,7 +104,6 @@ const PlayingField = ({ difficulty }: Props) => {
         display: "flex",
         alignItems: "center",
         flexDirection: "column",
-        gap: 20,
       }}
     >
       <div style={{ position: "relative", height: "250px", width: "100%" }}>
@@ -122,6 +119,13 @@ const PlayingField = ({ difficulty }: Props) => {
           />
         ))}
       </div>
+      <div
+        style={{
+          width: "100vw",
+          height: "25px",
+          backgroundColor: "brown",
+        }}
+      />
     </div>
   );
 };
