@@ -71,6 +71,7 @@ const Cup = ({
           transition,
           transformOrigin: "bottom left",
           transform: `rotate(${tiltCup ? -30 : 0}deg)`,
+          cursor: gameState.isGuessing ? "pointer" : "not-allowed",
         }}
         disabled={!gameState.isGuessing}
         onClick={handleGuess}
