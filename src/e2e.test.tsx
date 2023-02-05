@@ -6,17 +6,22 @@ import {
   within,
 } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
-import randomiseCupPositions from "./components/molecules/PlayingField/cupPositionUtil";
+import applyShuffleStrategy from "./components/molecules/PlayingField/utils/difficultyStrategies";
 import Game from "./Game";
 
 const mockRandom = jest.spyOn(global.Math, "random");
 
-jest.mock("./components/molecules/PlayingField/cupPositionUtil", () => ({
-  ...jest.requireActual("./components/molecules/PlayingField/cupPositionUtil"),
-  default: jest.fn(),
-}));
+jest.mock(
+  "./components/molecules/PlayingField/utils/difficultyStrategies",
+  () => ({
+    ...jest.requireActual(
+      "./components/molecules/PlayingField/utils/difficultyStrategies"
+    ),
+    default: jest.fn(),
+  })
+);
 
-const mockRandomiseCupPositions = randomiseCupPositions as jest.Mock;
+const mockApplyShuffleStrategy = applyShuffleStrategy as jest.Mock;
 
 const advanceTimersAndFlush = (timeMs: number): Promise<unknown> => {
   jest.advanceTimersByTime(timeMs);
@@ -60,7 +65,7 @@ describe("E2E test", () => {
 
     expect(screen.queryByTestId("ball")).toBeNull();
 
-    mockRandomiseCupPositions
+    mockApplyShuffleStrategy
       .mockReturnValueOnce([1, 2, 0])
       .mockReturnValueOnce([2, 0, 1])
       .mockReturnValueOnce([0, 1, 2])
@@ -84,7 +89,7 @@ describe("E2E test", () => {
 
     screen.getByText("GUESS A CUP");
 
-    expect(mockRandomiseCupPositions).toHaveBeenCalledTimes(10);
+    expect(mockApplyShuffleStrategy).toHaveBeenCalledTimes(10);
 
     const allCups = screen.getAllByTestId("cup");
 
@@ -131,7 +136,7 @@ describe("E2E test", () => {
 
     expect(screen.queryByTestId("ball")).toBeNull();
 
-    mockRandomiseCupPositions
+    mockApplyShuffleStrategy
       .mockReturnValueOnce([1, 2, 0])
       .mockReturnValueOnce([2, 0, 1])
       .mockReturnValueOnce([0, 1, 2])
@@ -150,7 +155,7 @@ describe("E2E test", () => {
 
     screen.getByText("GUESS A CUP");
 
-    expect(mockRandomiseCupPositions).toHaveBeenCalledTimes(5);
+    expect(mockApplyShuffleStrategy).toHaveBeenCalledTimes(5);
 
     const allCups = screen.getAllByTestId("cup");
 

@@ -13,7 +13,7 @@ import { GAME_PHASE } from "../../../constants/gamePhases";
 import { useGameState } from "../../../contexts/gameState/gameStateProvider";
 
 import Cup from "../../atoms/Cup";
-import { applyShuffleStrategy } from "./utils/difficultyStrategies";
+import applyShuffleStrategy from "./utils/difficultyStrategies";
 import {
   cupPositionsType,
   generateInitialCupPositions,

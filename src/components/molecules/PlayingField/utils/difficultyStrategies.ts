@@ -10,7 +10,9 @@ const DIFFICULTY_SHUFFLE_STRATEGIES: Record<
   [DIFFICULTY.HARD]: moveThemAll,
 } as const;
 
-export const applyShuffleStrategy = (
+const applyShuffleStrategy = (
   difficulty: difficultyType,
   currentCupPositions: number[]
 ) => DIFFICULTY_SHUFFLE_STRATEGIES[difficulty](currentCupPositions);
+
+export default applyShuffleStrategy;

@@ -19,7 +19,7 @@ const pickRandomUnusedPosition = (availablePositions: number[]): number => {
 };
 
 /**
- * check if every proposed position is the same as the last shuffle
+ * at most 1 cup may stay in the same position
  */
 
 // CALLOUT - did try doing .some (ie if any are in the same position)
@@ -27,9 +27,9 @@ const pickRandomUnusedPosition = (availablePositions: number[]): number => {
 // move in same direction
 
 const isVoidMove = (currentPositions: number[], newPositions: number[]) =>
-  currentPositions.every(
+  currentPositions.filter(
     (currentPosition, index) => newPositions[index] === currentPosition
-  );
+  ).length > 1;
 
 export const moveThemAll = (currentPositions: number[]): number[] => {
   const proposedNewPositions = placeRemainingCups(currentPositions.length);

@@ -92,7 +92,7 @@ function reducer(
       return guessResultActionHandler(state, action);
     default:
       const t: never = action;
-      throw Error("no action handler exists for", action);
+      throw Error("no action handler exists");
   }
 }
 
