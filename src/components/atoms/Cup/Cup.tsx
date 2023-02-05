@@ -3,7 +3,7 @@ import Ball from "../Ball";
 import { REVEAL_BALL_TRANSITION_SECONDS } from "../../../constants/animationDurations";
 import { GAME_PHASE } from "../../../constants/gamePhases";
 
-type Props = {
+export type Props = {
   position: 0 | 1 | 2;
   onGuess: (initialPosition: number) => void;
   startPosition: 0 | 1 | 2;
@@ -60,6 +60,7 @@ const Cup = ({
         onClick={handleGuess}
       ></button>
       {/* only render ball when tilting, to prevent devtool element cheating */}
+      {/* NOTE: shuffled phase is equivalent to 'ready to guess' */}
       {hasBall &&
         gameState.gamePhase !== GAME_PHASE.SHUFFLING &&
         gameState.gamePhase !== GAME_PHASE.SHUFFLED && <Ball />}

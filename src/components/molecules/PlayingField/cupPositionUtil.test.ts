@@ -7,7 +7,7 @@ describe("randomiseCupPositions", () => {
     jest.clearAllMocks();
   });
 
-  it("will give cup positions for 3 cups", () => {
+  test("will give cup positions for 3 cups", () => {
     mockRandom.mockReturnValueOnce(1).mockReturnValueOnce(1);
 
     const result = randomiseCupPositions([0, 1, 2]);
@@ -16,7 +16,7 @@ describe("randomiseCupPositions", () => {
     expect(mockRandom).toHaveBeenCalledTimes(2);
   });
 
-  it("will always give different positions than the input", () => {
+  test("will always give different positions than the input", () => {
     mockRandom
       // make first cup go to position 0
       .mockReturnValueOnce(0)

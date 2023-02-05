@@ -31,7 +31,7 @@ describe("Controls", () => {
     mockUseGameState.mockReturnValue({ gameState: {}, dispatch: mockDispatch });
   });
 
-  it("has start and difficulty select", () => {
+  test("has start and difficulty select", () => {
     renderer();
 
     expect(screen.getByText("Start game")).not.toBeDisabled();
@@ -44,7 +44,7 @@ describe("Controls", () => {
     expect(screen.getByText("hard")).not.toHaveAttribute("selected");
   });
 
-  it("should allow for game start", () => {
+  test("should allow for game start", () => {
     renderer();
 
     fireEvent.click(screen.getByText("Start game"));
@@ -55,7 +55,7 @@ describe("Controls", () => {
     });
   });
 
-  it("should allow for changing difficulty", () => {
+  test("should allow for changing difficulty", () => {
     const mockSetDifficulty = jest.fn();
 
     renderer({ setDifficulty: mockSetDifficulty });
@@ -67,7 +67,7 @@ describe("Controls", () => {
     expect(mockSetDifficulty).toHaveBeenCalledWith(DIFFICULTY.HARD);
   });
 
-  it("should disable controls when game is playing", () => {
+  test("should disable controls when game is playing", () => {
     mockUseGameState.mockReturnValue({
       gameState: { isPlaying: true, isGuessing: false },
       dispatch: jest.fn(),
@@ -78,7 +78,7 @@ describe("Controls", () => {
     expect(screen.getByTestId("difficulty-select")).toBeDisabled();
   });
 
-  it("should disable controls when game is awaiting guess", () => {
+  test("should disable controls when game is awaiting guess", () => {
     mockUseGameState.mockReturnValue({
       gameState: { isPlaying: false, isGuessing: true },
       dispatch: jest.fn(),

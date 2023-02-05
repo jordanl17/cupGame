@@ -1,5 +1,6 @@
 const Ball = () => (
   <div
+    data-testid="ball"
     style={{
       backgroundColor: "red",
       width: "50%",

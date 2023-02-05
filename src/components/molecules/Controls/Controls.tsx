@@ -17,7 +17,6 @@ const Controls = ({ setDifficulty, difficulty }: Props) => {
 
   const handleChangeDifficulty = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
-      console.log("sdfdsfsdfsdfds");
       const {
         target: { value },
       } = e;
