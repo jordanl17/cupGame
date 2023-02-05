@@ -4,7 +4,7 @@ import { GAME_PHASE } from "../../../constants/gamePhases";
 import { useGameState } from "../../../contexts/gameState/gameStateProvider";
 import StartButton from "../../atoms/StartButton";
 
-type Props = {
+export type Props = {
   setDifficulty: Dispatch<SetStateAction<difficultyType>>;
   difficulty: difficultyType;
 };
@@ -17,6 +17,7 @@ const Controls = ({ setDifficulty, difficulty }: Props) => {
 
   const handleChangeDifficulty = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
+      console.log("sdfdsfsdfsdfds");
       const {
         target: { value },
       } = e;
@@ -44,6 +45,7 @@ const Controls = ({ setDifficulty, difficulty }: Props) => {
       </div>
       <div>
         <select
+          data-testid="difficulty-select"
           disabled={isControlDisabled}
           defaultValue={difficulty}
           name="difficulty"
