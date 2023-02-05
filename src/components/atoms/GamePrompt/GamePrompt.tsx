@@ -18,11 +18,11 @@ const GamePrompt = () => {
     }
 
     if (gameState.gamePhase === GAME_PHASE.WIN) {
-      return <h1>YOU WON: YOU HAVE {gameState.points} points</h1>;
+      return <h1>YOU WON: YOU HAVE {gameState.points} POINTS</h1>;
     }
 
     if (gameState.gamePhase === GAME_PHASE.LOSE) {
-      return <h1>YOU LOST: YOU HAVE {gameState.points} points</h1>;
+      return <h1>YOU LOST: YOU HAVE {gameState.points} POINTS</h1>;
     }
   };
 

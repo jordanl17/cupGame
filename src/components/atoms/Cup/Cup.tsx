@@ -31,13 +31,14 @@ const Cup = ({
         position: "absolute",
         width: `calc(100vw/${numberOfCups * 2})`,
         height: "100%",
-        left: `calc((200vw/${numberOfCups * 2}) * ${position})`,
+        left: `calc(200vw * ${(position / (numberOfCups * 2)).toFixed(2)})`,
         transition: `left ${moveSpeed / 1000}s ease`,
         display: "flex",
         justifyContent: "center",
       }}
     >
       <button
+        data-testid="cup"
         style={{
           position: "absolute",
           zIndex: 1,

@@ -21,6 +21,9 @@ type Props = {
   difficulty: difficultyType;
 };
 
+const delay = (timeout: number) =>
+  new Promise<void>((res) => setTimeout(res, timeout));
+
 const PlayingField = ({ difficulty }: Props) => {
   const [cupPositions, setCupPositions] = useState<cupPositionsType>(
     INITIAL_CUP_POSITIONS
@@ -69,16 +72,13 @@ const PlayingField = ({ difficulty }: Props) => {
       }, REVEAL_BALL_TRANSITION_MS * 2);
     });
 
-  const delay = (timeout: number) =>
-    new Promise((res) => setTimeout(res, timeout));
-
   const startGame = async () => {
-    if (gameState.gamePhase !== GAME_PHASE.IDLE) {
-      // reset game is this isn't the first time
-      dispatch({ type: "changePhase", phase: GAME_PHASE.IDLE });
-      // brief pause to reset all cup tilts
-      await delay(PAUSE_BETWEEN_GAME_PHASES);
-    }
+    // if (gameState.gamePhase !== GAME_PHASE.START) {
+    //   // reset game if this isn't the first time
+    //   dispatch({ type: "changePhase", phase: GAME_PHASE.IDLE });
+    //   // brief pause to reset all cup tilts
+    //   await delay(PAUSE_BETWEEN_GAME_PHASES);
+    // }
 
     await placeBall();
     await delay(PAUSE_BETWEEN_GAME_PHASES);
