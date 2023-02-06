@@ -1,1 +1,1 @@
-export { default } from "./PlayingField";
+export { default } from './PlayingField'

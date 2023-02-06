@@ -1,1 +1,1 @@
-export { default } from "./Cup";
+export { default } from './Cup'

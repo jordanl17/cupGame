@@ -8,15 +8,15 @@ const StartButton = (
     <button
       style={{
         borderRadius: 20,
-        backgroundColor: "#da00ff",
-        color: "white",
+        backgroundColor: '#da00ff',
+        color: 'white',
         padding: 10,
-        border: "unset",
+        border: 'unset',
         opacity: props.disabled ? 0.5 : 1,
       }}
       {...props}
     />
-  );
-};
+  )
+}
 
-export default StartButton;
+export default StartButton

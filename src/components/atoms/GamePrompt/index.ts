@@ -1,1 +1,1 @@
-export { default } from "./GamePrompt";
+export { default } from './GamePrompt'

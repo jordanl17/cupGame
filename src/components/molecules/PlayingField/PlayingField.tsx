@@ -1,116 +1,125 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from 'react'
 
-import { useGameState } from "@contexts/gameState/gameStateProvider";
+import { useGameState } from '@contexts/gameState/gameStateProvider'
 
-import Cup from "@atoms/Cup";
+import Cup from '@atoms/Cup'
 
-import applyShuffleStrategy from "./utils/difficultyStrategies";
+import applyShuffleStrategy from './utils/difficultyStrategies'
 import {
   cupPositionsType,
   generateInitialCupPositions,
-} from "./utils/shuffleStrategies";
+} from './utils/shuffleStrategies'
 
 import {
   PAUSE_BETWEEN_GAME_PHASES,
   REVEAL_BALL_TRANSITION_MS,
-} from "@constants/animationDurations";
+} from '@constants/animationDurations'
 import {
   difficultyType,
   MOVE_SPEED,
   NUMBER_OF_MOVES,
-} from "@constants/difficulty";
-import { GAME_PHASE } from "@constants/gamePhases";
+} from '@constants/difficulty'
+import { GAME_PHASE } from '@constants/gamePhases'
 
 type Props = {
-  difficulty: difficultyType;
-};
+  difficulty: difficultyType
+}
 
 const delay = (timeout: number) =>
-  new Promise<void>((res) => setTimeout(res, timeout));
+  new Promise<void>((res) => setTimeout(res, timeout))
 
 const PlayingField = ({ difficulty }: Props) => {
   const [cupPositions, setCupPositions] = useState<cupPositionsType>(
     generateInitialCupPositions(difficulty)
-  );
+  )
   const [ballPosition, setBallPosition] = useState<number | undefined>(
     undefined
-  );
-  const { gameState, dispatch } = useGameState();
+  )
+  const { gameState, dispatch } = useGameState()
 
-  const makeAShuffle = (onComplete: (() => void) | null) => () => {
-    setCupPositions((currentCupPositions) =>
-      applyShuffleStrategy(difficulty, currentCupPositions)
-    );
+  const makeAShuffle = useCallback(
+    (onComplete: (() => void) | null) => () => {
+      setCupPositions((currentCupPositions) =>
+        applyShuffleStrategy(difficulty, currentCupPositions)
+      )
 
-    if (onComplete) onComplete();
-  };
+      if (onComplete) onComplete()
+    },
+    [difficulty]
+  )
 
-  const makeAllShuffles = () =>
-    new Promise<void>((res) => {
-      dispatch({ type: "changePhase", phase: GAME_PHASE.SHUFFLING });
+  const makeAllShuffles = useCallback(
+    () =>
+      new Promise<void>((res) => {
+        dispatch({ type: 'changePhase', phase: GAME_PHASE.SHUFFLING })
 
-      for (
-        let shuffleNumber = 0;
-        shuffleNumber < NUMBER_OF_MOVES[difficulty];
-        shuffleNumber++
-      ) {
-        // pass through complete cb when shuffle is the last
-        const onComplete =
-          shuffleNumber === NUMBER_OF_MOVES[difficulty] - 1
-            ? () => setTimeout(res, MOVE_SPEED[difficulty])
-            : null;
+        for (
+          let shuffleNumber = 0;
+          shuffleNumber < NUMBER_OF_MOVES[difficulty];
+          shuffleNumber++
+        ) {
+          // pass through complete cb when shuffle is the last
+          const onComplete =
+            shuffleNumber === NUMBER_OF_MOVES[difficulty] - 1
+              ? () => setTimeout(res, MOVE_SPEED[difficulty])
+              : null
 
-        setTimeout(
-          makeAShuffle(onComplete),
-          MOVE_SPEED[difficulty] * shuffleNumber
-        );
-      }
-    });
+          setTimeout(
+            makeAShuffle(onComplete),
+            MOVE_SPEED[difficulty] * shuffleNumber
+          )
+        }
+      }),
+    [difficulty, dispatch, makeAShuffle]
+  )
 
-  const placeBall = () =>
-    new Promise<void>((res) => {
-      dispatch({ type: "changePhase", phase: GAME_PHASE.PLACING_BALL });
-      const ballCupPosition = Math.floor(Math.random() * 3);
-      setBallPosition(ballCupPosition);
+  const placeBall = useCallback(
+    () =>
+      new Promise<void>((res) => {
+        dispatch({ type: 'changePhase', phase: GAME_PHASE.PLACING_BALL })
+        const ballCupPosition = Math.floor(Math.random() * 3)
+        setBallPosition(ballCupPosition)
 
-      setTimeout(() => {
-        dispatch({ type: "changePhase", phase: GAME_PHASE.PLACED_BALL });
-        res();
-      }, REVEAL_BALL_TRANSITION_MS * 2);
-    });
+        setTimeout(() => {
+          dispatch({ type: 'changePhase', phase: GAME_PHASE.PLACED_BALL })
+          res()
+        }, REVEAL_BALL_TRANSITION_MS * 2)
+      }),
+    [dispatch]
+  )
 
-  const startGame = async () => {
-    await placeBall();
-    await delay(PAUSE_BETWEEN_GAME_PHASES);
-    await makeAllShuffles();
-    dispatch({ type: "changePhase", phase: GAME_PHASE.SHUFFLED });
-  };
+  const startGame = useCallback(async () => {
+    await placeBall()
+    await delay(PAUSE_BETWEEN_GAME_PHASES)
+    await makeAllShuffles()
+    dispatch({ type: 'changePhase', phase: GAME_PHASE.SHUFFLED })
+  }, [dispatch, makeAllShuffles, placeBall])
 
   useEffect(() => {
-    if (gameState.gamePhase === GAME_PHASE.START) startGame();
-  }, [gameState]);
+    if (gameState.gamePhase === GAME_PHASE.START) startGame()
+  }, [gameState, startGame])
 
   useEffect(() => {
-    setCupPositions(generateInitialCupPositions(difficulty));
-  }, [difficulty]);
+    setCupPositions(generateInitialCupPositions(difficulty))
+  }, [difficulty])
 
   const handleOnGuess = (initialPositionGuess: number) =>
     dispatch({
-      type: "guessResult",
+      type: 'guessResult',
       difficulty,
-      guessResult: initialPositionGuess === ballPosition ? "WIN" : "LOSE",
-    });
+      guessResult: initialPositionGuess === ballPosition ? 'WIN' : 'LOSE',
+    })
 
   return (
     <div
       style={{
-        margin: "calc(100vw/12)",
-        display: "flex",
-        alignItems: "center",
-        flexDirection: "column",
+        margin: 'calc(100vw/12)',
+        display: 'flex',
+        alignItems: 'center',
+        flexDirection: 'column',
       }}
     >
-      <div style={{ position: "relative", height: "250px", width: "100%" }}>
+      <div style={{ position: 'relative', height: '250px', width: '100%' }}>
         {cupPositions.map((position, initialPosition) => (
           <Cup
             onGuess={handleOnGuess}
@@ -125,13 +134,13 @@ const PlayingField = ({ difficulty }: Props) => {
       </div>
       <div
         style={{
-          width: "100vw",
-          height: "25px",
-          backgroundColor: "brown",
+          width: '100vw',
+          height: '25px',
+          backgroundColor: 'brown',
         }}
       />
     </div>
-  );
-};
+  )
+}
 
-export default PlayingField;
+export default PlayingField

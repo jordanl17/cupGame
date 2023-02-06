@@ -1,6 +1,6 @@
-import { moveThemAll, twoAtATime } from "./shuffleStrategies";
+import { moveThemAll, twoAtATime } from './shuffleStrategies'
 
-import { DIFFICULTY, difficultyType } from "@constants/difficulty";
+import { DIFFICULTY, difficultyType } from '@constants/difficulty'
 
 const DIFFICULTY_SHUFFLE_STRATEGIES: Record<
   difficultyType,
@@ -9,11 +9,11 @@ const DIFFICULTY_SHUFFLE_STRATEGIES: Record<
   [DIFFICULTY.EASY]: twoAtATime,
   [DIFFICULTY.MODERATE]: moveThemAll,
   [DIFFICULTY.HARD]: moveThemAll,
-} as const;
+} as const
 
 const applyShuffleStrategy = (
   difficulty: difficultyType,
   currentCupPositions: number[]
-) => DIFFICULTY_SHUFFLE_STRATEGIES[difficulty](currentCupPositions);
+) => DIFFICULTY_SHUFFLE_STRATEGIES[difficulty](currentCupPositions)
 
-export default applyShuffleStrategy;
+export default applyShuffleStrategy

@@ -1,42 +1,42 @@
-import { Dispatch, SetStateAction, useCallback } from "react";
+import { Dispatch, SetStateAction, useCallback } from 'react'
 
-import StartButton from "@atoms/StartButton";
+import StartButton from '@atoms/StartButton'
 
-import { useGameState } from "@contexts/gameState/gameStateProvider";
+import { useGameState } from '@contexts/gameState/gameStateProvider'
 
-import { DIFFICULTY, difficultyType } from "@constants/difficulty";
-import { GAME_PHASE } from "@constants/gamePhases";
+import { DIFFICULTY, difficultyType } from '@constants/difficulty'
+import { GAME_PHASE } from '@constants/gamePhases'
 
 export type Props = {
-  setDifficulty: Dispatch<SetStateAction<difficultyType>>;
-  difficulty: difficultyType;
-};
+  setDifficulty: Dispatch<SetStateAction<difficultyType>>
+  difficulty: difficultyType
+}
 
 const Controls = ({ setDifficulty, difficulty }: Props) => {
-  const { gameState, dispatch } = useGameState();
+  const { gameState, dispatch } = useGameState()
 
   const handleStartGame = () =>
-    dispatch({ type: "changePhase", phase: GAME_PHASE.START });
+    dispatch({ type: 'changePhase', phase: GAME_PHASE.START })
 
   const handleChangeDifficulty = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
       const {
         target: { value },
-      } = e;
+      } = e
 
-      setDifficulty(value as difficultyType);
+      setDifficulty(value as difficultyType)
     },
-    []
-  );
+    [setDifficulty]
+  )
 
-  const isControlDisabled = gameState.isPlaying || gameState.isGuessing;
+  const isControlDisabled = gameState.isPlaying || gameState.isGuessing
 
   return (
     <div
       style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "baseline",
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'baseline',
         gap: 20,
       }}
     >
@@ -62,7 +62,7 @@ const Controls = ({ setDifficulty, difficulty }: Props) => {
         </select>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Controls;
+export default Controls

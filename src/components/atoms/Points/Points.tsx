@@ -1,22 +1,22 @@
-import { useGameState } from "@contexts/gameState/gameStateProvider";
+import { useGameState } from '@contexts/gameState/gameStateProvider'
 
 const Points = () => {
-  const { gameState } = useGameState();
+  const { gameState } = useGameState()
 
   return (
     <div
       style={{
-        position: "absolute",
+        position: 'absolute',
         top: 0,
         right: 0,
         margin: 20,
         padding: 10,
-        backgroundColor: "#bbb",
+        backgroundColor: '#bbb',
       }}
     >
       Points: {gameState.points}
     </div>
-  );
-};
+  )
+}
 
-export default Points;
+export default Points
