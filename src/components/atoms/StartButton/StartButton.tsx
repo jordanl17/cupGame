@@ -15,7 +15,7 @@ const StartButton = (
         opacity: props.disabled ? 0.5 : 1,
       }}
       {...props}
-    ></button>
+    />
   );
 };
 

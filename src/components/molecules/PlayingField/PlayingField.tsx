@@ -32,7 +32,9 @@ const PlayingField = ({ difficulty }: Props) => {
   const [cupPositions, setCupPositions] = useState<cupPositionsType>(
     generateInitialCupPositions(difficulty)
   );
-  const [ballPosition, setBallPosition] = useState<number | null>(null);
+  const [ballPosition, setBallPosition] = useState<number | undefined>(
+    undefined
+  );
   const { gameState, dispatch } = useGameState();
 
   const makeAShuffle = (onComplete: (() => void) | null) => () => {

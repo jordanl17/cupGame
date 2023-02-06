@@ -2,6 +2,7 @@
 ### scripts
 * `npm run dev` - will start the dev serve running on port `8080`
 * `npm t` - will run a suite of unit and e2e tests
+* `npm test:coverage` - run unit and e2e tests with coverage report
 
 ### Game Features
 There are 3 difficulty levels broken down as follows

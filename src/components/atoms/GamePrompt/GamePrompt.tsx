@@ -1,34 +1,32 @@
 import { GAME_PHASE } from "@constants/gamePhases";
 import { useGameState } from "@contexts/gameState/gameStateProvider";
+import { useMemo } from "react";
 
 const GamePrompt = () => {
   const { gameState } = useGameState();
 
-  const renderPrompt = () => {
-    if (gameState.gamePhase === GAME_PHASE.PLACING_BALL) {
-      return <h1>WATCH THE BALL...</h1>;
-    }
-
-    if (gameState.gamePhase === GAME_PHASE.SHUFFLING) {
-      return <h1>SHUFFLING THE CUPS...</h1>;
-    }
-
+  const promptMessage = useMemo(() => {
     if (gameState.isGuessing) {
-      return <h1>GUESS A CUP</h1>;
+      return "GUESS A CUP";
     }
 
-    if (gameState.gamePhase === GAME_PHASE.WIN) {
-      return <h1>YOU WON: YOU HAVE {gameState.points} POINTS</h1>;
+    switch (gameState.gamePhase) {
+      case GAME_PHASE.PLACING_BALL:
+        return "WATCH THE BALL...";
+      case GAME_PHASE.SHUFFLING:
+        return "SHUFFLING THE CUPS...";
+      case GAME_PHASE.WIN:
+        return `YOU WON: YOU HAVE ${gameState.points} POINTS`;
+      case GAME_PHASE.LOSE:
+        return `YOU LOST: YOU HAVE ${gameState.points} POINTS`;
+      default:
+        return "";
     }
-
-    if (gameState.gamePhase === GAME_PHASE.LOSE) {
-      return <h1>YOU LOST: YOU HAVE {gameState.points} POINTS</h1>;
-    }
-  };
+  }, [gameState.isGuessing, gameState.gamePhase]);
 
   return (
     <div style={{ height: 25, display: "flex", justifyContent: "center" }}>
-      {renderPrompt()}
+      <h1>{promptMessage}</h1>
     </div>
   );
 };

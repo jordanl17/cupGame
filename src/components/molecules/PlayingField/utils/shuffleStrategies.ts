@@ -15,28 +15,6 @@ const pickRandomUnusedPosition = (availablePositions: number[]): number => {
   return availablePositions[proposedNewPositionIndex];
 };
 
-/**
- * at most 1 cup may stay in the same position
- */
-
-// CALLOUT - did try doing .some (ie if any are in the same position)
-// but this gives weird experience since 2 cups next to each other always
-// move in same direction
-
-const isVoidMove = (currentPositions: number[], newPositions: number[]) =>
-  currentPositions.filter(
-    (currentPosition, index) => newPositions[index] === currentPosition
-  ).length > 1;
-
-export const moveThemAll = (currentPositions: number[]): number[] => {
-  const proposedNewPositions = placeRemainingCups(currentPositions.length);
-
-  if (isVoidMove(currentPositions, proposedNewPositions))
-    return moveThemAll(currentPositions);
-
-  return proposedNewPositions;
-};
-
 const placeRemainingCups = (
   numberOfCupsToPlace: number,
   currentlyPlacedCups: number[] = []
@@ -62,26 +40,38 @@ const placeRemainingCups = (
   ];
 };
 
-export const twoAtATime = (currentCupPositions: number[]): number[] => {
-  const firstPositionToSwap = Math.floor(
-    Math.random() * currentCupPositions.length
-  );
-  const secondPositionToSwap = Math.floor(
-    Math.random() * currentCupPositions.length
-  );
+/**
+ * at most 1 cup may stay in the same position between shuffles
+ */
+const isVoidMove = (currentPositions: number[], newPositions: number[]) =>
+  currentPositions.filter(
+    (currentPosition, index) => newPositions[index] === currentPosition
+  ).length > 1;
 
-  if (firstPositionToSwap === secondPositionToSwap)
-    return twoAtATime(currentCupPositions);
+export const moveThemAll = (currentPositions: number[]): number[] => {
+  const proposedNewPositions = placeRemainingCups(currentPositions.length);
+
+  if (isVoidMove(currentPositions, proposedNewPositions))
+    return moveThemAll(currentPositions);
+
+  return proposedNewPositions;
+};
+
+export const twoAtATime = (currentCupPositions: number[]): number[] => {
+  const APosition = Math.floor(Math.random() * currentCupPositions.length);
+  const BPosition = Math.floor(Math.random() * currentCupPositions.length);
+
+  if (APosition === BPosition) return twoAtATime(currentCupPositions);
 
   return currentCupPositions.map((currentPosition) => {
-    // swap cup 1 and move it to cup 2 position
-    if (currentPosition === firstPositionToSwap) {
-      return secondPositionToSwap;
+    // set cup at position A to be at position B
+    if (currentPosition === APosition) {
+      return BPosition;
     }
 
-    // swap cup 2 and move it to cup 1 position
-    if (currentPosition === secondPositionToSwap) {
-      return firstPositionToSwap;
+    // swap cup at position B to be at position A
+    if (currentPosition === BPosition) {
+      return APosition;
     }
 
     // other cups remain in their current position
