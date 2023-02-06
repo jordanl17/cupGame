@@ -1,7 +1,4 @@
-import {
-  difficultyType,
-  NUMBER_OF_CUPS,
-} from "@constants/difficulty";
+import { difficultyType, NUMBER_OF_CUPS } from "@constants/difficulty";
 
 export type cupPositionsType = number[];
 
@@ -66,23 +63,25 @@ const placeRemainingCups = (
 };
 
 export const twoAtATime = (currentCupPositions: number[]): number[] => {
-  const firstCupToSwap = Math.floor(Math.random() * currentCupPositions.length);
-  const secondCupToSwap = Math.floor(
+  const firstPositionToSwap = Math.floor(
+    Math.random() * currentCupPositions.length
+  );
+  const secondPositionToSwap = Math.floor(
     Math.random() * currentCupPositions.length
   );
 
-  if (firstCupToSwap === secondCupToSwap)
+  if (firstPositionToSwap === secondPositionToSwap)
     return twoAtATime(currentCupPositions);
 
   return currentCupPositions.map((currentPosition) => {
     // swap cup 1 and move it to cup 2 position
-    if (currentPosition === firstCupToSwap) {
-      return secondCupToSwap;
+    if (currentPosition === firstPositionToSwap) {
+      return secondPositionToSwap;
     }
 
     // swap cup 2 and move it to cup 1 position
-    if (currentPosition === secondCupToSwap) {
-      return firstCupToSwap;
+    if (currentPosition === secondPositionToSwap) {
+      return firstPositionToSwap;
     }
 
     // other cups remain in their current position

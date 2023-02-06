@@ -70,6 +70,7 @@ const PlayingField = ({ difficulty }: Props) => {
       dispatch({ type: "changePhase", phase: GAME_PHASE.PLACING_BALL });
       const ballCupPosition = Math.floor(Math.random() * 3);
       setBallPosition(ballCupPosition);
+
       setTimeout(() => {
         dispatch({ type: "changePhase", phase: GAME_PHASE.PLACED_BALL });
         res();
