@@ -78,13 +78,6 @@ const PlayingField = ({ difficulty }: Props) => {
     });
 
   const startGame = async () => {
-    // if (gameState.gamePhase !== GAME_PHASE.START) {
-    //   // reset game if this isn't the first time
-    //   dispatch({ type: "changePhase", phase: GAME_PHASE.IDLE });
-    //   // brief pause to reset all cup tilts
-    //   await delay(PAUSE_BETWEEN_GAME_PHASES);
-    // }
-
     await placeBall();
     await delay(PAUSE_BETWEEN_GAME_PHASES);
     await makeAllShuffles();
