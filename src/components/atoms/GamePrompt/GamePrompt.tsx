@@ -1,5 +1,5 @@
-import { GAME_PHASE } from "../../../constants/gamePhases";
-import { useGameState } from "../../../contexts/gameState/gameStateProvider";
+import { GAME_PHASE } from "@constants/gamePhases";
+import { useGameState } from "@contexts/gameState/gameStateProvider";
 
 const GamePrompt = () => {
   const { gameState } = useGameState();

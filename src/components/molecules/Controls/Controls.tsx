@@ -1,8 +1,11 @@
 import { Dispatch, SetStateAction, useCallback } from "react";
-import { DIFFICULTY, difficultyType } from "../../../constants/difficulty";
-import { GAME_PHASE } from "../../../constants/gamePhases";
-import { useGameState } from "../../../contexts/gameState/gameStateProvider";
-import StartButton from "../../atoms/StartButton";
+
+import StartButton from "@atoms/StartButton";
+
+import { useGameState } from "@contexts/gameState/gameStateProvider";
+
+import { DIFFICULTY, difficultyType } from "@constants/difficulty";
+import { GAME_PHASE } from "@constants/gamePhases";
 
 export type Props = {
   setDifficulty: Dispatch<SetStateAction<difficultyType>>;

@@ -1,7 +1,7 @@
 import {
   difficultyType,
   NUMBER_OF_CUPS,
-} from "../../../../constants/difficulty";
+} from "@constants/difficulty";
 
 export type cupPositionsType = number[];
 

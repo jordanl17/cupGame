@@ -1,4 +1,4 @@
-import { useGameState } from "../../../contexts/gameState/gameStateProvider";
+import { useGameState } from "@contexts/gameState/gameStateProvider";
 
 const Points = () => {
   const { gameState } = useGameState();

@@ -1,23 +1,25 @@
 import { useEffect, useState } from "react";
-import {
-  PAUSE_BETWEEN_GAME_PHASES,
-  REVEAL_BALL_TRANSITION_MS,
-} from "../../../constants/animationDurations";
-import {
-  DIFFICULTY,
-  difficultyType,
-  MOVE_SPEED,
-  NUMBER_OF_MOVES,
-} from "../../../constants/difficulty";
-import { GAME_PHASE } from "../../../constants/gamePhases";
-import { useGameState } from "../../../contexts/gameState/gameStateProvider";
 
-import Cup from "../../atoms/Cup";
+import { useGameState } from "@contexts/gameState/gameStateProvider";
+
+import Cup from "@atoms/Cup";
+
 import applyShuffleStrategy from "./utils/difficultyStrategies";
 import {
   cupPositionsType,
   generateInitialCupPositions,
 } from "./utils/shuffleStrategies";
+
+import {
+  PAUSE_BETWEEN_GAME_PHASES,
+  REVEAL_BALL_TRANSITION_MS,
+} from "@constants/animationDurations";
+import {
+  difficultyType,
+  MOVE_SPEED,
+  NUMBER_OF_MOVES,
+} from "@constants/difficulty";
+import { GAME_PHASE } from "@constants/gamePhases";
 
 type Props = {
   difficulty: difficultyType;

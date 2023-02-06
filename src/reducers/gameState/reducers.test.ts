@@ -1,6 +1,6 @@
-import { renderHook } from "@testing-library/react";
-import { DIFFICULTY } from "../../constants/difficulty";
-import { GAME_PHASE } from "../../constants/gamePhases";
+import { act, renderHook } from "@testing-library/react";
+import { DIFFICULTY } from "@constants/difficulty";
+import { GAME_PHASE } from "@constants/gamePhases";
 import useGameStateReducer, { GameStateActionsType } from "./reducers";
 
 describe("useGameStateReducer", () => {
@@ -19,10 +19,12 @@ describe("useGameStateReducer", () => {
   test("can win game", () => {
     const { result, rerender } = renderHook(useGameStateReducer);
 
-    result.current[1]({
-      type: "guessResult",
-      guessResult: "WIN",
-      difficulty: DIFFICULTY.HARD,
+    act(() => {
+      result.current[1]({
+        type: "guessResult",
+        guessResult: "WIN",
+        difficulty: DIFFICULTY.HARD,
+      });
     });
 
     rerender();
@@ -39,10 +41,12 @@ describe("useGameStateReducer", () => {
   test("can lose game", () => {
     const { result, rerender } = renderHook(useGameStateReducer);
 
-    result.current[1]({
-      type: "guessResult",
-      guessResult: "LOSE",
-      difficulty: DIFFICULTY.HARD,
+    act(() => {
+      result.current[1]({
+        type: "guessResult",
+        guessResult: "LOSE",
+        difficulty: DIFFICULTY.HARD,
+      });
     });
 
     rerender();
@@ -59,9 +63,11 @@ describe("useGameStateReducer", () => {
   test("can change game phase", () => {
     const { result, rerender } = renderHook(useGameStateReducer);
 
-    result.current[1]({
-      type: "changePhase",
-      phase: GAME_PHASE.SHUFFLING,
+    act(() => {
+      result.current[1]({
+        type: "changePhase",
+        phase: GAME_PHASE.SHUFFLING,
+      });
     });
 
     rerender();
@@ -89,10 +95,12 @@ describe("useGameStateReducer", () => {
     expect(result.current[0]).toEqual(state);
 
     try {
-      result.current[1]({
-        type: "something-not-valid",
-        phase: GAME_PHASE.SHUFFLING,
-      } as unknown as GameStateActionsType);
+      act(() => {
+        result.current[1]({
+          type: "something-not-valid",
+          phase: GAME_PHASE.SHUFFLING,
+        } as unknown as GameStateActionsType);
+      });
     } catch (e: any) {
       expect(e.message).toEqual("no action handler exists");
       rerender();

@@ -5,12 +5,12 @@ import {
   waitFor,
   within,
 } from "@testing-library/react";
-import { DIFFICULTY } from "../../../constants/difficulty";
-import { useGameState } from "../../../contexts/gameState/gameStateProvider";
+import { DIFFICULTY } from "@constants/difficulty";
+import { useGameState } from "@contexts/gameState/gameStateProvider";
 
 import Controls, { Props } from "./Controls";
 
-jest.mock("../../../contexts/gameState/gameStateProvider", () => ({
+jest.mock("@contexts/gameState/gameStateProvider", () => ({
   useGameState: jest.fn(),
 }));
 

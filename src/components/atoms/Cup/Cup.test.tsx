@@ -1,9 +1,9 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { GAME_PHASE } from "../../../constants/gamePhases";
-import { useGameState } from "../../../contexts/gameState/gameStateProvider";
+import { GAME_PHASE } from "@constants/gamePhases";
+import { useGameState } from "@contexts/gameState/gameStateProvider";
 import Cup, { Props } from "./Cup";
 
-jest.mock("../../../contexts/gameState/gameStateProvider", () => ({
+jest.mock("@contexts/gameState/gameStateProvider", () => ({
   useGameState: jest.fn(),
 }));
 

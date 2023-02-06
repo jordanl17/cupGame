@@ -1,7 +1,9 @@
-import { useGameState } from "../../../contexts/gameState/gameStateProvider";
-import Ball from "../Ball";
-import { REVEAL_BALL_TRANSITION_SECONDS } from "../../../constants/animationDurations";
-import { GAME_PHASE } from "../../../constants/gamePhases";
+import Ball from "@atoms/Ball";
+
+import { useGameState } from "@contexts/gameState/gameStateProvider";
+
+import { REVEAL_BALL_TRANSITION_SECONDS } from "@constants/animationDurations";
+import { GAME_PHASE } from "@constants/gamePhases";
 
 export type Props = {
   position: number;

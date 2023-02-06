@@ -1,6 +1,7 @@
-import { difficultyType, POINTS } from "../../constants/difficulty";
-import { gameStateType, GAME_PHASE } from "../../constants/gamePhases";
 import { useReducer } from "react";
+
+import { difficultyType, POINTS } from "@constants/difficulty";
+import { gameStateType, GAME_PHASE } from "@constants/gamePhases";
 
 type changePhaseActionType = {
   type: "changePhase";

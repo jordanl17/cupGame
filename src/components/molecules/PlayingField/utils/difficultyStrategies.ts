@@ -1,5 +1,6 @@
-import { DIFFICULTY, difficultyType } from "../../../../constants/difficulty";
 import { moveThemAll, twoAtATime } from "./shuffleStrategies";
+
+import { DIFFICULTY, difficultyType } from "@constants/difficulty";
 
 const DIFFICULTY_SHUFFLE_STRATEGIES: Record<
   difficultyType,
